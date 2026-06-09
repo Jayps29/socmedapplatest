@@ -11,11 +11,15 @@ class CommentsController < ApplicationController
 
         unless @post.user == current_user
           CommentNotifier.with(
-            user: current_user,
-            post: @post,
-            comment: @comment
+          user: current_user,
+          post: @post,
+          comment: @comment
           ).deliver(@post.user)
-          @post.user.broadcast_notification_badge
+
+          @post.user.broadcast_notification(
+          "#{current_user.username} commented on your post",
+          "comment"
+          )
         end
 
         redirect_back fallback_location: root_path

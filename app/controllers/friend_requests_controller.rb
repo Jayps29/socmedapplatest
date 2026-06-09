@@ -13,15 +13,16 @@ class FriendRequestsController < ApplicationController
         )
 
         FriendRequestNotifier.with(
-  sender: current_user
-).deliver(receiver)
+        sender: current_user
+        ).deliver(receiver)
 
+        receiver.broadcast_notification(
+        "#{current_user.username} sent you a friend request",
+        "friend_request"
+        )
 
-
-receiver.broadcast_notification_badge
-
-redirect_back fallback_location: root_path
-      end
+        redirect_back fallback_location: root_path
+    end
 
       def update
         request = current_user.received_friend_requests.find(params[:id])
@@ -37,10 +38,13 @@ redirect_back fallback_location: root_path
         )
 
         FriendAcceptedNotifier.with(
-  user: current_user
-).deliver(request.sender)
+        user: current_user
+        ).deliver(request.sender)
 
-request.sender.broadcast_notification_badge
+        request.sender.broadcast_notification(
+        "#{current_user.username} accepted your friend request",
+        "friend_accepted"
+        )
 
         request.destroy
 

@@ -8,10 +8,14 @@ class LikesController < ApplicationController
 
       unless post.user == current_user
         LikeNotifier.with(
-          user: current_user,
-          post: post
-        ).deliver(post.user)
-        post.user.broadcast_notification_badge
+        user: current_user,
+        post: post
+      ).deliver(post.user)
+
+      post.user.broadcast_notification(
+      "#{current_user.username} liked your post",
+      "like"
+      )
       end
 
       redirect_back fallback_location: root_path

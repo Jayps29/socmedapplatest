@@ -110,16 +110,30 @@ has_many :received_friend_requests,
          dependent: :destroy
 
 
-         def broadcast_notification_badge
-          puts "===== BROADCAST ====="
-          puts "USER #{id}"
+        def broadcast_notification(message, type)
+          broadcast_notification_badge
+          broadcast_notification_toast(message, type)
+        end
 
+        def broadcast_notification_badge
           Turbo::StreamsChannel.broadcast_replace_to(
             self,
             target: "notification_badge",
             partial: "notifications/badge",
             locals: {
               current_user: self
+            }
+          )
+        end
+
+        def broadcast_notification_toast(message, type)
+          Turbo::StreamsChannel.broadcast_append_to(
+            self,
+            target: "toast_notifications",
+            partial: "notifications/toast",
+            locals: {
+              message: message,
+              type: type
             }
           )
         end
