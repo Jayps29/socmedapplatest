@@ -1,0 +1,50 @@
+<%= turbo_frame_tag dom_id(comment) do %>
+
+  <div class="bg-gray-100 rounded-lg p-3 flex gap-3">
+
+    <% if comment.user.avatar.attached? %>
+
+      <%= image_tag comment.user.avatar,
+      class: "w-8 h-8 rounded-full object-cover flex-shrink-0" %>
+
+    <% else %>
+
+      <div
+        class="
+          w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0
+        ">
+        👤
+      </div>
+
+    <% end %>
+
+    <div class="flex-1">
+
+      <div class="flex justify-between items-start">
+
+        <div>
+
+          <div class="font-semibold text-sm">
+            <%= comment.user.username %>
+          </div>
+
+          <div class="text-xs text-gray-500">
+            <%= time_ago_in_words(comment.created_at) %>
+            ago
+          </div>
+
+        </div>
+
+        <%= render "comments/actions", comment: comment, post: post %>
+
+      </div>
+
+      <p class="mt-1">
+        <%= comment.content %>
+      </p>
+
+    </div>
+
+  </div>
+
+<% end %>

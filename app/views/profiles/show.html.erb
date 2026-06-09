@@ -1,0 +1,25 @@
+<div data-controller="relationship-modal">
+  <div class="max-w-3xl mx-auto">
+    <!-- Profile Card -->
+    <%= render "profile_card", user: @user %>
+    <!-- Create Post -->
+    <% if user_signed_in? && current_user == @user %>
+
+      <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+
+        <%= render "posts/form", post: @post, submit_text: "Post" %>
+
+      </div>
+
+    <% end %>
+    <!-- Posts -->
+    <h2 class="text-2xl font-bold mb-4">
+      Posts
+    </h2>
+
+    <%= render "posts_section", user: @user %>
+
+  </div>
+  <!-- Relationship Modal -->
+  <%= render "relationship_modal" %>
+</div>

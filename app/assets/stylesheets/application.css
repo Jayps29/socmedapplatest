@@ -1,0 +1,56 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+ .pagy {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .pagy a,
+  .pagy span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+  
+    min-width: 40px;
+    height: 40px;
+  
+    border-radius: 0.75rem;
+  
+    text-decoration: none;
+  }
+  
+  .pagy a {
+    background: white;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .pagy a:hover {
+    background: #eff6ff;
+    border-color: #3b82f6;
+  }
+  
+  .pagy [aria-current="page"] {
+    background: #2563eb;
+    color: white !important;
+  
+    min-width: 40px;
+    height: 40px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    border-radius: 0.75rem;
+    font-weight: 600;
+  }

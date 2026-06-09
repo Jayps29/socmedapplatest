@@ -1,0 +1,58 @@
+<% @followers.each do |follower| %>
+
+  <div class="flex items-center justify-between py-3 border-b">
+
+    <div class="flex items-center gap-3">
+
+      <% if follower.avatar.attached? %>
+
+        <%= image_tag follower.avatar, class: "w-10 h-10 rounded-full object-cover" %>
+
+      <% else %>
+
+        <div
+          class="
+            w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
+          ">
+          👤
+        </div>
+
+      <% end %>
+
+      <%= link_to follower.username,
+      profile_path(follower),
+      class: "font-medium hover:text-blue-600" %>
+
+    </div>
+
+    <% if current_user == @user %>
+
+      <% follow = follower.active_follows.find_by(followed: current_user) %>
+
+      <% if follow %>
+
+        <%= button_to "Remove",
+        remove_follower_follow_path(follow),
+        method: :delete,
+        form: {
+          data: {
+            turbo_confirm: "Remove this follower?",
+          },
+        },
+        class: "bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg text-sm" %>
+
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+<% end %>
+
+<% if @followers.empty? %>
+
+  <p class="text-gray-500 text-center py-4">
+    No followers yet.
+  </p>
+
+<% end %>

@@ -1,0 +1,49 @@
+<% sender =
+  notification.event.params[:sender] ||
+  notification.event.params[:follower] ||
+  notification.event.params[:user] %>
+
+<%= link_to notification.url,
+    class: "
+      block rounded-xl shadow-sm p-4 mb-3 transition hover:bg-gray-50
+      #{notification.read? ? 'bg-white' : 'bg-blue-50 border-l-4 border-blue-500'}
+    " do %>
+
+  <div class="flex items-center gap-4">
+
+    <% if sender.avatar.attached? %>
+
+      <%= image_tag sender.avatar,
+          class: "w-12 h-12 rounded-full object-cover border" %>
+
+    <% else %>
+
+      <div
+        class="
+          w-12 h-12 rounded-full bg-gray-300
+          flex items-center justify-center
+        ">
+        👤
+      </div>
+
+    <% end %>
+
+    <div class="flex-1">
+
+      <div class="<%= notification.read? ? 'font-medium' : 'font-bold' %>">
+        <%= notification.message %>
+      </div>
+
+      <div class="text-sm text-gray-500">
+        <%= time_ago_in_words(notification.created_at) %> ago
+      </div>
+
+    </div>
+
+    <% unless notification.read? %>
+      <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+    <% end %>
+
+  </div>
+
+<% end %>

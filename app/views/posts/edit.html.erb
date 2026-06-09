@@ -1,0 +1,5 @@
+<%= turbo_frame_tag dom_id(@post) do %>
+
+  <%= render "posts/form", post: @post, submit_text: "Update Post" %>
+
+<% end %>

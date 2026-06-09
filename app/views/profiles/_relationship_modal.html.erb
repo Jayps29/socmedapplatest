@@ -1,0 +1,55 @@
+<div
+  id="relationshipModal"
+  data-relationship-modal-target="modal"
+  data-action="click->relationship-modal#backdrop"
+  class="
+    hidden fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center
+    justify-center z-50
+  ">
+
+  <div
+    class="
+      bg-white rounded-xl w-full max-w-md p-6 max-h-[80vh] overflow-y-auto
+    ">
+
+    <div class="flex justify-between items-center mb-4">
+
+      <h2
+        id="modalTitle"
+        data-relationship-modal-target="title"
+        class="text-xl font-bold">
+        Friends
+      </h2>
+
+      <button
+        type="button"
+        data-action="click->relationship-modal#close"
+        class="text-gray-500 hover:text-gray-700 text-xl">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="modalContent" data-relationship-modal-target="content"></div>
+
+  </div>
+
+</div>
+<!-- Hidden Data -->
+<div id="friends-data" class="hidden">
+
+  <%= render "profiles/relationships/friends" %>
+
+</div>
+
+<div id="followers-data" class="hidden">
+
+  <%= render "profiles/relationships/followers" %>
+
+</div>
+
+<div id="following-data" class="hidden">
+
+  <%= render "profiles/relationships/following" %>
+
+</div>

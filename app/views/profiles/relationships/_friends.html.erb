@@ -1,0 +1,59 @@
+<% @friends.each do |friend| %>
+
+  <div class="flex items-center justify-between py-3 border-b">
+
+    <div class="flex items-center gap-3">
+
+      <% if friend.avatar.attached? %>
+
+        <%= image_tag friend.avatar, class: "w-10 h-10 rounded-full object-cover" %>
+
+      <% else %>
+
+        <div
+          class="
+            w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
+          ">
+          👤
+        </div>
+
+      <% end %>
+
+      <%= link_to friend.username,
+      profile_path(friend),
+      class: "font-medium hover:text-blue-600" %>
+
+    </div>
+
+    <% if current_user == @user %>
+
+      <% friendship = current_user.friendship_with(friend) %>
+
+      <% if friendship %>
+
+        <%= button_to "Unfriend",
+        friendship_path(friendship),
+        method: :delete,
+        form: {
+          data: {
+            turbo_confirm: "Remove this friend?",
+          },
+        },
+        class:
+          "bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium" %>
+
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+<% end %>
+
+<% if @friends.empty? %>
+
+  <p class="text-gray-500 text-center py-4">
+    No friends yet.
+  </p>
+
+<% end %>

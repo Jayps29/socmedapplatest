@@ -1,0 +1,69 @@
+<div class="max-w-4xl mx-auto">
+
+  <h1 class="text-3xl font-bold mb-6">
+    Find Friends
+  </h1>
+
+  <%= search_form_for @q, url: users_path, method: :get do |f| %>
+
+    <div class="flex gap-2 mb-6">
+
+      <%= f.search_field :username_or_first_name_or_last_name_cont,
+                     placeholder: "Search users...",
+                     class: "flex-1 border rounded-lg px-4 py-2" %>
+
+      <%= f.submit "Search", class: "bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+
+    </div>
+
+  <% end %>
+
+  <% @users.each do |user| %>
+
+    <div class="bg-white rounded-xl shadow-sm p-4 mb-3">
+
+      <div class="flex items-center justify-between">
+
+        <div class="flex items-center gap-3">
+
+          <% if user.avatar.attached? %>
+
+            <%= image_tag user.avatar, class: "w-12 h-12 rounded-full object-cover" %>
+
+          <% else %>
+
+            <div
+              class="
+                w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center
+              ">
+              👤
+            </div>
+
+          <% end %>
+
+          <div>
+
+            <%= link_to user.username,
+            profile_path(user),
+            class: "font-semibold hover:text-blue-600" %>
+
+            <div class="text-gray-500 text-sm">
+              <%= user.first_name %>
+              <%= user.last_name %>
+            </div>
+
+          </div>
+
+        </div>
+
+        <%= link_to "View Profile",
+        profile_path(user),
+        class: "bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200" %>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+  <%= render "shared/pagination", pagy: @pagy %>

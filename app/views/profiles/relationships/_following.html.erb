@@ -1,0 +1,59 @@
+<% @following.each do |followed| %>
+
+  <div class="flex items-center justify-between py-3 border-b">
+
+    <div class="flex items-center gap-3">
+
+      <% if followed.avatar.attached? %>
+
+        <%= image_tag followed.avatar, class: "w-10 h-10 rounded-full object-cover" %>
+
+      <% else %>
+
+        <div
+          class="
+            w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
+          ">
+          👤
+        </div>
+
+      <% end %>
+
+      <%= link_to followed.username,
+      profile_path(followed),
+      class: "font-medium hover:text-blue-600" %>
+
+    </div>
+
+    <% if current_user == @user %>
+
+      <% follow = current_user.active_follows.find_by(followed: followed) %>
+
+      <% if follow %>
+
+        <%= button_to "Unfollow",
+        follow_path(follow),
+        method: :delete,
+        form: {
+          data: {
+            turbo_confirm: "Unfollow this user?",
+          },
+        },
+        class:
+          "bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition" %>
+
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+<% end %>
+
+<% if @following.empty? %>
+
+  <p class="text-gray-500 text-center py-4">
+    Not following anyone yet.
+  </p>
+
+<% end %>

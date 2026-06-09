@@ -1,0 +1,35 @@
+<div class="max-w-3xl mx-auto">
+
+  <h1 class="text-3xl font-bold mb-6">
+    Notifications
+  </h1>
+
+  <% if @notifications.any? %>
+
+    <% @notifications.each do |notification| %>
+
+      <%= render "notification", notification: notification %>
+
+    <% end %>
+
+  <% else %>
+
+    <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+
+      <div class="text-5xl mb-3">
+        🔔
+      </div>
+
+      <h3 class="text-xl font-semibold mb-2">
+        No notifications
+      </h3>
+
+      <p class="text-gray-500">
+        You're all caught up.
+      </p>
+
+    </div>
+
+  <% end %>
+
+</div>

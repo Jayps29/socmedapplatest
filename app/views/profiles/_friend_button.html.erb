@@ -1,0 +1,42 @@
+<% if user_signed_in? && current_user != @user %>
+
+  <% if current_user.friends_with?(@user) %>
+
+    <%= button_to "Unfriend",
+    friendship_path(current_user.friendship_with(@user)),
+    method: :delete,
+    data: {
+      turbo_confirm: "Remove this friend?",
+    },
+    class: "mt-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg" %>
+
+  <% else %>
+
+    <% request = current_user.pending_friend_request_with(@user) %>
+
+    <% if request.nil? %>
+
+      <%= button_to "Add Friend",
+      friend_requests_path(receiver_id: @user.id),
+      method: :post,
+      class: "mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg" %>
+
+    <% elsif request.sender_id == current_user.id %>
+
+      <%= button_to "Cancel Request",
+      friend_request_path(request),
+      method: :delete,
+      class: "mt-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg" %>
+
+    <% elsif request.receiver_id == current_user.id %>
+
+      <%= button_to "Accept Request",
+      friend_request_path(request),
+      method: :patch,
+      class: "mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+
+    <% end %>
+
+  <% end %>
+
+<% end %>

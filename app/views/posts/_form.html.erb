@@ -1,0 +1,21 @@
+<h2 class="font-semibold mb-3">
+  Create Post
+</h2>
+
+<%= form_with model: post do |f| %>
+
+  <div class="mb-3">
+    <%= f.text_area :content,
+                placeholder: "What's on your mind?",
+                class:
+                  "w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.file_field :images, multiple: true, class: "block w-full text-sm" %>
+  </div>
+
+  <%= f.submit submit_text,
+           class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg" %>
+
+<% end %>

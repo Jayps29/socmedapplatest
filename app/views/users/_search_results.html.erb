@@ -1,0 +1,55 @@
+<% @users.each do |user| %>
+
+  <%= link_to profile_path(user),
+        class: "block px-4 py-3 hover:bg-gray-100 border-b" do %>
+
+    <div class="flex items-center gap-3">
+
+      <% if user.avatar.attached? %>
+
+        <%= image_tag user.avatar, class: "w-10 h-10 rounded-full object-cover" %>
+
+      <% else %>
+
+        <div
+          class="
+            w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
+          ">
+          👤
+        </div>
+
+      <% end %>
+
+      <div>
+
+        <div class="font-medium">
+          <%= user.username %>
+        </div>
+
+        <div class="text-sm text-gray-500">
+          <%= user.first_name %>
+          <%= user.last_name %>
+        </div>
+
+      </div>
+
+    </div>
+
+  <% end %>
+
+<% end %>
+
+<% if @users.any? %>
+
+  <%= link_to "Show More Results",
+  users_path(q: { username_or_first_name_or_last_name_cont: params[:query] }),
+  class:
+    "
+                block text-center
+                px-4 py-3
+                text-blue-600
+                hover:bg-gray-50
+                font-medium
+              " %>
+
+<% end %>

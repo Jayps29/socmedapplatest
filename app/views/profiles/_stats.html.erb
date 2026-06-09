@@ -1,0 +1,51 @@
+<div class="flex justify-center gap-10 mt-6">
+
+  <button
+    type="button"
+    data-action="click->relationship-modal#open"
+    data-relationship-modal-type-param="friends"
+    class="
+      text-center cursor-pointer px-4 py-2 rounded-xl transition-all duration-200
+      hover:bg-blue-50 hover:shadow-md hover:-translate-y-1
+    ">
+    <div class="font-bold text-lg">
+      <%= @user.friends.count %>
+    </div>
+    <div class="text-gray-500">
+      Friends
+    </div>
+  </button>
+
+  <button
+    type="button"
+    data-action="click->relationship-modal#open"
+    data-relationship-modal-type-param="followers"
+    class="
+      text-center cursor-pointer px-4 py-2 rounded-xl transition-all duration-200
+      hover:bg-blue-50 hover:shadow-md hover:-translate-y-1
+    ">
+    <div class="font-bold text-lg">
+      <%= @user.followers.count %>
+    </div>
+    <div class="text-gray-500">
+      Followers
+    </div>
+  </button>
+
+  <button
+    type="button"
+    data-action="click->relationship-modal#open"
+    data-relationship-modal-type-param="following"
+    class="
+      text-center cursor-pointer px-4 py-2 rounded-xl transition-all duration-200
+      hover:bg-blue-50 hover:shadow-md hover:-translate-y-1
+    ">
+    <div class="font-bold text-lg">
+      <%= @user.following.count %>
+    </div>
+    <div class="text-gray-500">
+      Following
+    </div>
+  </button>
+
+</div>

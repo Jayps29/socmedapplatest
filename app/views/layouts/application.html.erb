@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Social App" %></title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Social App">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+
+    <%= javascript_importmap_tags %>
+
+  </head>
+
+  <body class="bg-gray-100">
+
+    <% if user_signed_in? %>
+      <%= turbo_stream_from current_user %>
+    <% end %>
+
+    <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
+
+      <div class="max-w-6xl mx-auto px-4">
+
+        <div class="flex items-center justify-between h-16">
+
+          <%= link_to root_path,
+                  class: "text-2xl font-bold text-blue-600" do %>
+            SocialApp
+          <% end %>
+
+          <% if user_signed_in? %>
+
+            <div class="flex items-center gap-5">
+
+              <div data-controller="search" class="relative">
+
+                <input
+                  type="text"
+                  placeholder="Search users..."
+                  autocomplete="off"
+                  data-search-target="input"
+                  data-action="input->search#search"
+                  class="
+                    border rounded-lg px-4 py-2 w-64 focus:ring-2 focus:ring-blue-500
+                    focus:outline-none
+                  ">
+
+                <div
+                  data-search-target="results"
+                  class="
+                    absolute top-full left-0 mt-2 bg-white rounded-xl shadow-lg w-full z-50
+                    overflow-hidden
+                  "></div>
+
+              </div>
+              <!-- Notification Bell -->
+<div
+  data-controller="notifications"
+  class="relative">
+
+  <button
+  type="button"
+  data-action="click->notifications#toggle"
+  class="
+    relative
+    flex items-center justify-center
+    w-10 h-10
+    rounded-full
+    hover:bg-gray-100
+    transition
+    cursor-pointer
+  ">
+
+    <span class="text-2xl">
+      🔔
+    </span>
+
+    <%= render "notifications/badge" %>
+
+  </button>
+
+  <div
+    data-notifications-target="menu"
+    class="
+      hidden
+      absolute right-0 mt-2
+      w-96 bg-white rounded-xl
+      shadow-lg border z-50
+    ">
+  </div>
+
+</div>
+              <!-- User Dropdown -->
+              <details class="relative">
+
+                <summary class="list-none cursor-pointer flex items-center gap-3">
+
+                  <% if current_user.avatar.attached? %>
+
+                    <%= image_tag current_user.avatar,
+                    class: "w-10 h-10 rounded-full object-cover border" %>
+
+                  <% else %>
+
+                    <div
+                      class="
+                        w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
+                      ">
+                      👤
+                    </div>
+
+                  <% end %>
+
+                  <span class="font-medium">
+                    <%= current_user.username %>
+                  </span>
+
+                  <span class="text-sm">
+                    ▼
+                  </span>
+
+                </summary>
+
+                <div
+                  class="
+                    absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border overflow-hidden
+                  ">
+
+                  <%= link_to "🏠 Home", root_path, class: "block px-4 py-3 hover:bg-gray-100" %>
+
+                  <%= link_to "👤 My Profile",
+                  profile_path(current_user),
+                  class: "block px-4 py-3 hover:bg-gray-100" %>
+
+                  <hr>
+
+                  <%= button_to "🚪 Logout",
+                  destroy_user_session_path,
+                  method: :delete,
+                  class: "w-full text-left px-4 py-3 hover:bg-gray-100" %>
+
+                </div>
+
+              </details>
+
+            </div>
+
+          <% else %>
+
+            <div class="flex items-center gap-3">
+
+              <%= link_to "Login",
+              new_user_session_path,
+              class: "text-gray-700 hover:text-blue-600" %>
+
+              <%= link_to "Register",
+              new_user_registration_path,
+              class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg" %>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </nav>
+
+    <main class="max-w-6xl mx-auto py-6 px-4">
+
+      <% if notice.present? %>
+        <div class="bg-green-100 text-green-700 px-4 py-3 rounded-lg mb-4">
+          <%= notice %>
+        </div>
+      <% end %>
+
+      <% if alert.present? %>
+        <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-4">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+
+    </main>
+
+  </body>
+</html>

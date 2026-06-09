@@ -1,0 +1,119 @@
+<%= turbo_frame_tag dom_id(post) do %>
+
+  <div class="bg-white rounded-xl shadow-sm p-5 mb-6">
+    <!-- Post Header -->
+    <div class="flex items-center justify-between mb-4">
+
+      <div class="flex items-center gap-3">
+
+        <% if post.user.avatar.attached? %>
+
+          <%= image_tag post.user.avatar, class: "w-12 h-12 rounded-full object-cover border" %>
+
+        <% else %>
+
+          <div
+            class="
+              w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center
+            ">
+            👤
+          </div>
+
+        <% end %>
+
+        <div>
+
+          <%= link_to post.user.username,
+          profile_path(post.user),
+          class: "font-bold text-lg hover:text-blue-600" %>
+
+          <div class="text-sm text-gray-500">
+            <%= time_ago_in_words(post.created_at) %>
+            ago
+          </div>
+
+        </div>
+
+      </div>
+
+      <%= render "posts/actions", post: post %>
+
+    </div>
+    <!-- Post Content -->
+    <p class="mb-4 whitespace-pre-wrap">
+      <%= post.content %>
+    </p>
+    <!-- Images -->
+    <% if post.images.attached? %>
+
+      <div class="grid grid-cols-2 gap-2 mb-4">
+
+        <% post.images.each do |image| %>
+
+          <%= image_tag image, class: "rounded-lg w-full object-cover" %>
+
+        <% end %>
+
+      </div>
+
+    <% end %>
+    <!-- Stats -->
+    <div
+      class="
+        flex justify-between items-center border-t border-b py-3 mb-4 text-gray-600
+      ">
+
+      <span>
+        ❤️
+        <%= post.likes.count %>
+        Likes
+      </span>
+
+      <span>
+        💬
+        <%= post.comments.count %>
+        Comments
+      </span>
+
+    </div>
+    <!-- Like Button -->
+    <% if user_signed_in? %>
+
+      <% existing_like = post.likes.find_by(user: current_user) %>
+
+      <% if existing_like %>
+
+        <%= button_to "Unlike",
+        like_path(existing_like),
+        method: :delete,
+        class: "bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg mb-4" %>
+
+      <% else %>
+
+        <%= button_to "Like",
+        likes_path(post_id: post.id),
+        class: "bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg mb-4" %>
+
+      <% end %>
+
+    <% end %>
+    <!-- Comments -->
+    <div class="space-y-2 mb-4">
+
+      <% post.comments.each do |comment| %>
+
+        <%= render "comments/comment", comment: comment, post: post %>
+
+      <% end %>
+
+    </div>
+    <!-- Comment Form -->
+    <% if user_signed_in? %>
+
+      <%= render "comments/form", comment: Comment.new, post: post, submit_text: "Send" %>
+
+    <% end %>
+
+  </div>
+
+<% end %>
