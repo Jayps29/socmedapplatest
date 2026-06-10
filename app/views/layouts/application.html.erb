@@ -23,7 +23,10 @@
 
   </head>
 
-  <body class="bg-gray-100">
+  <body
+  class="bg-gray-100"
+  data-controller="notification-toast"
+>
 
     <% if user_signed_in? %>
       <%= turbo_stream_from current_user %>
@@ -197,5 +200,7 @@
 
     </main>
 
+
+    <div id="toast_notifications"></div>
   </body>
 </html>

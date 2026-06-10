@@ -8,49 +8,69 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
- .pagy {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-  
-  .pagy a,
-  .pagy span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+@import "https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css";
 
-  
-    min-width: 40px;
-    height: 40px;
-  
-    border-radius: 0.75rem;
-  
-    text-decoration: none;
-  }
-  
-  .pagy a {
-    background: white;
-    border: 1px solid #e5e7eb;
-  }
-  
-  .pagy a:hover {
-    background: #eff6ff;
-    border-color: #3b82f6;
-  }
-  
-  .pagy [aria-current="page"] {
-    background: #2563eb;
-    color: white !important;
-  
-    min-width: 40px;
-    height: 40px;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    border-radius: 0.75rem;
-    font-weight: 600;
-  }
+.pagy {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pagy a,
+.pagy span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+
+  min-width: 40px;
+  height: 40px;
+
+  border-radius: 0.75rem;
+
+  text-decoration: none;
+}
+
+.pagy a {
+  background: white;
+  border: 1px solid #e5e7eb;
+}
+
+.pagy a:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.pagy [aria-current="page"] {
+  background: #2563eb;
+  color: white !important;
+
+  min-width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.75rem;
+  font-weight: 600;
+}
+
+.social-toast {
+  background: #ffffff !important;
+  color: #111827 !important;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  min-width: 340px;
+  max-width: 380px;
+  min-height: 50px;
+
+  padding: 0 !important;
+}

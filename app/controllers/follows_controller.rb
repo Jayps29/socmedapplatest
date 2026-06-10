@@ -14,12 +14,14 @@ class FollowsController < ApplicationController
         follower: current_user
         ).deliver(user)
 
-
-
-        user.broadcast_notification_badge
+        user.broadcast_notification(
+        "#{current_user.username} followed you",
+        "follow",
+        profile_path(current_user)
+        )
 
         redirect_back fallback_location: root_path
-      end
+    end
 
     def destroy
       follow = current_user.active_follows.find(params[:id])
@@ -37,5 +39,5 @@ class FollowsController < ApplicationController
         end
 
         redirect_back fallback_location: root_path
-      end
+    end
 end
