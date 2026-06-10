@@ -4,7 +4,8 @@ document.dispatchEvent(
     detail: {
       message: "<%= j(message) %>",
       type: "<%= type %>",
-      url: "<%= url %>"
+      url: "<%= url %>",
+      friendRequestId: <%= friend_request_id.present? ? friend_request_id : "null" %>
     }
   })
 )
