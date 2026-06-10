@@ -2,27 +2,29 @@ class FriendRequestsController < ApplicationController
     before_action :authenticate_user!
 
     def create
-        receiver = User.find(params[:receiver_id])
+      receiver = User.find(params[:receiver_id])
 
-        return redirect_back(
-          fallback_location: root_path
-        ) if current_user.friends_with?(receiver)
+      return redirect_back(
+        fallback_location: root_path
+      ) if current_user.friends_with?(receiver)
 
-        current_user.sent_friend_requests.create!(
-          receiver: receiver
-        )
+      friend_request = current_user.sent_friend_requests.create!(
+        receiver: receiver
+      )
 
-        FriendRequestNotifier.with(
-        sender: current_user
-        ).deliver(receiver)
+      FriendRequestNotifier.with(
+        sender: current_user,
+        friend_request_id: friend_request.id
+      ).deliver(receiver)
 
-        receiver.broadcast_notification(
-        "#{current_user.username} sent you a friend request",
-        "friend_request",
-        profile_path(current_user)
-        )
+      receiver.broadcast_notification(
+      "#{current_user.username} sent you a friend request",
+      "friend_request",
+      profile_path(current_user),
+      friend_request.id
+      )
 
-        redirect_back fallback_location: root_path
+      redirect_back fallback_location: root_path
     end
 
       def update
@@ -50,18 +52,30 @@ class FriendRequestsController < ApplicationController
 
         request.destroy
 
-        redirect_back fallback_location: root_path
+        respond_to do |format|
+          format.html do
+            redirect_back fallback_location: root_path
+          end
+
+          format.turbo_stream { head :ok }
+        end
       end
 
-    def destroy
-      request = FriendRequest.find(params[:id])
+      def destroy
+        request = FriendRequest.find(params[:id])
 
-      if request.sender == current_user ||
-         request.receiver == current_user
+        if request.sender == current_user ||
+           request.receiver == current_user
 
-        request.destroy
+          request.destroy
+        end
+
+        respond_to do |format|
+          format.html do
+            redirect_back fallback_location: root_path
+          end
+
+          format.turbo_stream { head :ok }
+        end
       end
-
-      redirect_back fallback_location: root_path
-    end
 end

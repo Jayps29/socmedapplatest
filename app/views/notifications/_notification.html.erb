@@ -1,49 +1,86 @@
 <% sender =
-  notification.event.params[:sender] ||
-  notification.event.params[:follower] ||
-  notification.event.params[:user] %>
+  notification.event.params[:sender] || notification.event.params[:follower] ||
+    notification.event.params[:user] %>
 
-<%= link_to notification.url,
-    class: "
-      block rounded-xl shadow-sm p-4 mb-3 transition hover:bg-gray-50
-      #{notification.read? ? 'bg-white' : 'bg-blue-50 border-l-4 border-blue-500'}
-    " do %>
+<% friend_request =
+  FriendRequest.find_by(id: notification.event.params[:friend_request_id]) %>
 
-  <div class="flex items-center gap-4">
+<div
+  class="
+    rounded-xl shadow-sm p-4 mb-3 #{notification.read? ? 'bg-white' : 'bg-blue-50
+    border-l-4 border-blue-500'}
+  "
+>
 
-    <% if sender.avatar.attached? %>
+  <%= link_to notification.url,
+      class: "block hover:bg-gray-50 rounded-lg transition" do %>
 
-      <%= image_tag sender.avatar,
-          class: "w-12 h-12 rounded-full object-cover border" %>
+    <div class="flex items-center gap-4">
 
-    <% else %>
+      <% if sender.avatar.attached? %>
 
-      <div
-        class="
-          w-12 h-12 rounded-full bg-gray-300
-          flex items-center justify-center
-        ">
-        👤
+        <%= image_tag sender.avatar, class: "w-12 h-12 rounded-full object-cover border" %>
+
+      <% else %>
+
+        <div
+          class="
+            w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center
+          "
+        >
+          👤
+        </div>
+
+      <% end %>
+
+      <div class="flex-1">
+
+        <div class="<%= notification.read? ? 'font-medium' : 'font-bold' %>">
+          <%= notification.message %>
+        </div>
+
+        <div class="text-sm text-gray-500">
+          <%= time_ago_in_words(notification.created_at) %>
+          ago
+        </div>
+
       </div>
 
-    <% end %>
-
-    <div class="flex-1">
-
-      <div class="<%= notification.read? ? 'font-medium' : 'font-bold' %>">
-        <%= notification.message %>
-      </div>
-
-      <div class="text-sm text-gray-500">
-        <%= time_ago_in_words(notification.created_at) %> ago
-      </div>
+      <% unless notification.read? %>
+        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+      <% end %>
 
     </div>
 
-    <% unless notification.read? %>
-      <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-    <% end %>
+  <% end %>
 
-  </div>
+  <% if friend_request.present? %>
 
-<% end %>
+    <div class="flex justify-center gap-2 mt-3">
+
+      <%= button_to "Accept",
+      friend_request_path(friend_request),
+      method: :patch,
+      class:
+        "
+                  bg-blue-500 hover:bg-blue-600
+                  text-white px-3 py-1 rounded-lg text-sm
+                " %>
+
+      <%= button_to "Decline",
+      friend_request_path(friend_request),
+      method: :delete,
+      data: {
+        turbo_confirm: "Decline this friend request?",
+      },
+      class:
+        "
+                  bg-red-500 hover:bg-red-600
+                  text-white px-3 py-1 rounded-lg text-sm
+                " %>
+
+    </div>
+
+  <% end %>
+
+</div>

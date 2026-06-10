@@ -30,10 +30,22 @@
 
     <% elsif request.receiver_id == current_user.id %>
 
-      <%= button_to "Accept Request",
-      friend_request_path(request),
-      method: :patch,
-      class: "mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+      <div class="flex gap-2 justify-center mt-2">
+
+        <%= button_to "Accept Request",
+        friend_request_path(request),
+        method: :patch,
+        class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+
+        <%= button_to "Decline",
+        friend_request_path(request),
+        method: :delete,
+        data: {
+          turbo_confirm: "Decline this friend request?",
+        },
+        class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg" %>
+
+      </div>
 
     <% end %>
 
