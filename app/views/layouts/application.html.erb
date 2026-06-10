@@ -23,10 +23,7 @@
 
   </head>
 
-  <body
-  class="bg-gray-100"
-  data-controller="notification-toast"
->
+  <body class="bg-gray-100" data-controller="notification-toast">
 
     <% if user_signed_in? %>
       <%= turbo_stream_from current_user %>
@@ -58,53 +55,47 @@
                   class="
                     border rounded-lg px-4 py-2 w-64 focus:ring-2 focus:ring-blue-500
                     focus:outline-none
-                  ">
+                  "
+                >
 
                 <div
                   data-search-target="results"
                   class="
                     absolute top-full left-0 mt-2 bg-white rounded-xl shadow-lg w-full z-50
                     overflow-hidden
-                  "></div>
+                  "
+                ></div>
 
               </div>
               <!-- Notification Bell -->
-<div
-  data-controller="notifications"
-  class="relative">
+              <div data-controller="notifications" class="relative">
 
-  <button
-  type="button"
-  data-action="click->notifications#toggle"
-  class="
-    relative
-    flex items-center justify-center
-    w-10 h-10
-    rounded-full
-    hover:bg-gray-100
-    transition
-    cursor-pointer
-  ">
+                <button
+                  type="button"
+                  data-action="click->notifications#toggle"
+                  class="
+                    relative flex items-center justify-center w-10 h-10 rounded-full
+                    hover:bg-gray-100 transition cursor-pointer
+                  "
+                >
 
-    <span class="text-2xl">
-      🔔
-    </span>
+                  <span class="text-2xl">
+                    🔔
+                  </span>
 
-    <%= render "notifications/badge" %>
+                  <%= render "notifications/badge" %>
 
-  </button>
+                </button>
 
-  <div
-    data-notifications-target="menu"
-    class="
-      hidden
-      absolute right-0 mt-2
-      w-96 bg-white rounded-xl
-      shadow-lg border z-50
-    ">
-  </div>
+                <div
+                  data-notifications-target="menu"
+                  class="
+                    hidden absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-lg border z-50
+                  "
+                >
+                </div>
 
-</div>
+              </div>
               <!-- User Dropdown -->
               <details class="relative">
 
@@ -120,7 +111,8 @@
                     <div
                       class="
                         w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
-                      ">
+                      "
+                    >
                       👤
                     </div>
 
@@ -139,7 +131,8 @@
                 <div
                   class="
                     absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border overflow-hidden
-                  ">
+                  "
+                >
 
                   <%= link_to "🏠 Home", root_path, class: "block px-4 py-3 hover:bg-gray-100" %>
 
@@ -199,7 +192,6 @@
       <%= yield %>
 
     </main>
-
 
     <div id="toast_notifications"></div>
   </body>

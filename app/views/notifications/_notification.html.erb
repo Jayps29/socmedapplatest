@@ -1,17 +1,14 @@
 <% sender =
-  notification.event.params[:sender] ||
-  notification.event.params[:follower] ||
-  notification.event.params[:user] %>
+  notification.event.params[:sender] || notification.event.params[:follower] ||
+    notification.event.params[:user] %>
 
 <% friend_request =
-  FriendRequest.find_by(
-    id: notification.event.params[:friend_request_id]
-  ) %>
+  FriendRequest.find_by(id: notification.event.params[:friend_request_id]) %>
 
 <div
   class="
-    rounded-xl shadow-sm p-4 mb-3
-    #{notification.read? ? 'bg-white' : 'bg-blue-50 border-l-4 border-blue-500'}
+    rounded-xl shadow-sm p-4 mb-3 #{notification.read? ? 'bg-white' : 'bg-blue-50
+    border-l-4 border-blue-500'}
   "
 >
 
@@ -22,16 +19,15 @@
 
       <% if sender.avatar.attached? %>
 
-        <%= image_tag sender.avatar,
-            class: "w-12 h-12 rounded-full object-cover border" %>
+        <%= image_tag sender.avatar, class: "w-12 h-12 rounded-full object-cover border" %>
 
       <% else %>
 
         <div
           class="
-            w-12 h-12 rounded-full bg-gray-300
-            flex items-center justify-center
-          ">
+            w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center
+          "
+        >
           👤
         </div>
 
@@ -44,7 +40,8 @@
         </div>
 
         <div class="text-sm text-gray-500">
-          <%= time_ago_in_words(notification.created_at) %> ago
+          <%= time_ago_in_words(notification.created_at) %>
+          ago
         </div>
 
       </div>
@@ -62,23 +59,25 @@
     <div class="flex justify-center gap-2 mt-3">
 
       <%= button_to "Accept",
-          friend_request_path(friend_request),
-          method: :patch,
-          class: "
-            bg-blue-500 hover:bg-blue-600
-            text-white px-3 py-1 rounded-lg text-sm
-          " %>
+      friend_request_path(friend_request),
+      method: :patch,
+      class:
+        "
+                  bg-blue-500 hover:bg-blue-600
+                  text-white px-3 py-1 rounded-lg text-sm
+                " %>
 
       <%= button_to "Decline",
-          friend_request_path(friend_request),
-          method: :delete,
-          data: {
-            turbo_confirm: "Decline this friend request?"
-          },
-          class: "
-            bg-red-500 hover:bg-red-600
-            text-white px-3 py-1 rounded-lg text-sm
-          " %>
+      friend_request_path(friend_request),
+      method: :delete,
+      data: {
+        turbo_confirm: "Decline this friend request?",
+      },
+      class:
+        "
+                  bg-red-500 hover:bg-red-600
+                  text-white px-3 py-1 rounded-lg text-sm
+                " %>
 
     </div>
 
