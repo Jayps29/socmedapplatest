@@ -110,9 +110,9 @@ has_many :received_friend_requests,
          dependent: :destroy
 
 
-        def broadcast_notification(message, type)
+        def broadcast_notification(message, type, url)
           broadcast_notification_badge
-          broadcast_notification_toast(message, type)
+          broadcast_notification_toast(message, type, url)
         end
 
         def broadcast_notification_badge
@@ -126,14 +126,15 @@ has_many :received_friend_requests,
           )
         end
 
-        def broadcast_notification_toast(message, type)
+        def broadcast_notification_toast(message, type, url)
           Turbo::StreamsChannel.broadcast_append_to(
             self,
             target: "toast_notifications",
             partial: "notifications/toast",
             locals: {
               message: message,
-              type: type
+              type: type,
+              url: url
             }
           )
         end

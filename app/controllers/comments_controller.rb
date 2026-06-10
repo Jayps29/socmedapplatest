@@ -18,7 +18,8 @@ class CommentsController < ApplicationController
 
           @post.user.broadcast_notification(
           "#{current_user.username} commented on your post",
-          "comment"
+          "comment",
+          post_path(@post)
           )
         end
 

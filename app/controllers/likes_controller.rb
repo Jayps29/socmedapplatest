@@ -14,7 +14,8 @@ class LikesController < ApplicationController
 
       post.user.broadcast_notification(
       "#{current_user.username} liked your post",
-      "like"
+      "like",
+      post_path(post)
       )
       end
 

@@ -16,7 +16,8 @@ class FollowsController < ApplicationController
 
         user.broadcast_notification(
         "#{current_user.username} followed you",
-        "follow"
+        "follow",
+        profile_path(current_user)
         )
 
         redirect_back fallback_location: root_path

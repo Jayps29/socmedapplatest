@@ -3,7 +3,8 @@ document.dispatchEvent(
   new CustomEvent("notification:received", {
     detail: {
       message: "<%= j(message) %>",
-      type: "<%= type %>"
+      type: "<%= type %>",
+      url: "<%= url %>"
     }
   })
 )

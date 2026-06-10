@@ -18,7 +18,8 @@ class FriendRequestsController < ApplicationController
 
         receiver.broadcast_notification(
         "#{current_user.username} sent you a friend request",
-        "friend_request"
+        "friend_request",
+        profile_path(current_user)
         )
 
         redirect_back fallback_location: root_path
@@ -42,8 +43,9 @@ class FriendRequestsController < ApplicationController
         ).deliver(request.sender)
 
         request.sender.broadcast_notification(
-        "#{current_user.username} accepted your friend request",
-        "friend_accepted"
+          "#{current_user.username} accepted your friend request",
+          "friend_accepted",
+          profile_path(current_user)
         )
 
         request.destroy
