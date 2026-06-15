@@ -4,8 +4,7 @@
 
     <% notifications.each do |notification| %>
 
-      <%= render "notifications/notification",
-          notification: notification %>
+      <%= render "notifications/notification", notification: notification %>
 
     <% end %>
 
@@ -14,8 +13,8 @@
   <div class="border-t p-3 text-center">
 
     <%= link_to "Show all notifications",
-        notifications_path,
-        class: "text-blue-600 hover:text-blue-700 font-medium" %>
+    notifications_path,
+    class: "text-blue-600 hover:text-blue-700 font-medium" %>
 
   </div>
 
