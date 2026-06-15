@@ -1,17 +1,2 @@
-<div class="max-h-96 overflow-y-auto">
-
-  <% @notifications.each do |notification| %>
-
-    <%= render "notifications/notification", notification: notification %>
-
-  <% end %>
-
-</div>
-
-<div class="border-t p-3 text-center">
-
-  <%= link_to "Show all notifications",
-  notifications_path,
-  class: "text-blue-600 hover:text-blue-700 font-medium" %>
-
-</div>
+<%= render "notifications/dropdown_content",
+    notifications: @notifications %>
