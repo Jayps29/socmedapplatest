@@ -110,21 +110,18 @@ has_many :received_friend_requests,
          dependent: :destroy
 
 
-          def broadcast_notification(
+        def broadcast_notification(message, type, url, friend_request_id = nil)
+          broadcast_notification_badge
+
+          broadcast_notification_dropdown
+
+          broadcast_notification_toast(
             message,
             type,
             url,
-            friend_request_id = nil
-            )
-              broadcast_notification_badge
-
-              broadcast_notification_toast(
-                message,
-                type,
-                url,
-                friend_request_id
-              )
-          end
+            friend_request_id
+          )
+        end
 
           def broadcast_notification_badge
             Turbo::StreamsChannel.broadcast_replace_to(
@@ -152,6 +149,20 @@ has_many :received_friend_requests,
                 type: type,
                 url: url,
                 friend_request_id: friend_request_id
+              }
+            )
+          end
+
+          def broadcast_notification_dropdown
+            Turbo::StreamsChannel.broadcast_replace_to(
+              self,
+              target: "notification_dropdown_content",
+              partial: "notifications/dropdown_content",
+              locals: {
+                notifications: notifications
+                  .includes(:event)
+                  .order(created_at: :desc)
+                  .limit(20)
               }
             )
           end

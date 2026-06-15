@@ -52,6 +52,9 @@ class FriendRequestsController < ApplicationController
 
         request.destroy
 
+        current_user.broadcast_notification_badge
+        current_user.broadcast_notification_dropdown
+
         respond_to do |format|
           format.html do
             redirect_back fallback_location: root_path
@@ -68,6 +71,9 @@ class FriendRequestsController < ApplicationController
            request.receiver == current_user
 
           request.destroy
+
+          current_user.broadcast_notification_badge
+          current_user.broadcast_notification_dropdown
         end
 
         respond_to do |format|
