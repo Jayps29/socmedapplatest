@@ -3,17 +3,25 @@ class ProfilesController < ApplicationController
     @user = User.find(params[:id])
 
     @pagy, @posts = pagy(
-      :offset,
-      @user.posts
-           .includes(
-             :user,
-             :comments,
-             :likes,
-             images_attachments: :blob
-           )
-           .order(created_at: :desc),
-      limit: 10
-    )
+  :offset,
+  @user.posts
+       .includes(
+         {
+           user: {
+             avatar_attachment: :blob
+           }
+         },
+         :likes,
+         images_attachments: :blob,
+         comments: {
+           user: {
+             avatar_attachment: :blob
+           }
+         }
+       )
+       .order(created_at: :desc),
+  limit: 10
+)
 
     @post = Post.new
 

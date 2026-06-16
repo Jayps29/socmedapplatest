@@ -67,13 +67,13 @@
 
       <span>
         ❤️
-        <%= post.likes.count %>
+        <%= post.likes.size %>
         Likes
       </span>
 
       <span>
         💬
-        <%= post.comments.count %>
+        <%= post.comments.size %>
         Comments
       </span>
 
@@ -81,7 +81,7 @@
     <!-- Like Button -->
     <% if user_signed_in? %>
 
-      <% existing_like = post.likes.find_by(user: current_user) %>
+      <% existing_like = post.likes.detect { |like| like.user_id == current_user.id } %>
 
       <% if existing_like %>
 
