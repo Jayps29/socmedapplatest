@@ -2,8 +2,7 @@
   notification.event.params[:sender] || notification.event.params[:follower] ||
     notification.event.params[:user] %>
 
-<% friend_request =
-  FriendRequest.find_by(id: notification.event.params[:friend_request_id]) %>
+<% friend_request_id = notification.event.params[:friend_request_id] %>
 
 <div
   class="
@@ -54,30 +53,30 @@
 
   <% end %>
 
-  <% if friend_request.present? %>
+  <% if friend_request_id.present? %>
 
     <div class="flex justify-center gap-2 mt-3">
 
       <%= button_to "Accept",
-      friend_request_path(friend_request),
+      friend_request_path(friend_request_id),
       method: :patch,
       class:
         "
-                        bg-blue-500 hover:bg-blue-600
-                        text-white px-3 py-1 rounded-lg text-sm
-                      " %>
+                bg-blue-500 hover:bg-blue-600
+                text-white px-3 py-1 rounded-lg text-sm
+              " %>
 
       <%= button_to "Decline",
-      friend_request_path(friend_request),
+      friend_request_path(friend_request_id),
       method: :delete,
       data: {
         turbo_confirm: "Decline this friend request?",
       },
       class:
         "
-                        bg-red-500 hover:bg-red-600
-                        text-white px-3 py-1 rounded-lg text-sm
-                      " %>
+                bg-red-500 hover:bg-red-600
+                text-white px-3 py-1 rounded-lg text-sm
+              " %>
 
     </div>
 

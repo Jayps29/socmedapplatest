@@ -61,14 +61,12 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "erb_lint", require: false
+
+  gem "prosopite"
 end
 
 group :development do
-  # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-end
-
-group :development do
   gem "erb-formatter"
 end
 

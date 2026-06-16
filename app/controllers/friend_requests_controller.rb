@@ -52,6 +52,10 @@ class FriendRequestsController < ApplicationController
 
         request.destroy
 
+        current_user.remove_friend_request_notification(
+  request.id
+)
+
         current_user.broadcast_notification_badge
         current_user.broadcast_notification_dropdown
 
@@ -67,10 +71,26 @@ class FriendRequestsController < ApplicationController
       def destroy
         request = FriendRequest.find(params[:id])
 
-        if request.sender == current_user ||
-           request.receiver == current_user
+        friend_request_id = request.id
+
+        if request.sender == current_user
+          receiver = request.receiver
 
           request.destroy
+
+          receiver.remove_friend_request_notification(
+            friend_request_id
+          )
+
+          receiver.broadcast_notification_badge
+          receiver.broadcast_notification_dropdown
+
+        elsif request.receiver == current_user
+          request.destroy
+
+          current_user.remove_friend_request_notification(
+            friend_request_id
+          )
 
           current_user.broadcast_notification_badge
           current_user.broadcast_notification_dropdown

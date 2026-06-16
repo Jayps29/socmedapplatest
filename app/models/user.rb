@@ -166,4 +166,12 @@ has_many :received_friend_requests,
               }
             )
           end
+
+          def remove_friend_request_notification(friend_request_id)
+            notifications.each do |notification|
+              if notification.event.params[:friend_request_id] == friend_request_id
+                notification.destroy
+              end
+            end
+          end
 end
