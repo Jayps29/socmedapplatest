@@ -12,7 +12,11 @@ Rails.application.routes.draw do
 
   get "/profile/:id", to: "profiles#show", as: :profile
   resources :users, only: [ :index ]
-  resources :posts, only: [ :create, :destroy, :edit, :update, :show ]
+  resources :posts, only: [ :create, :destroy, :edit, :update, :show ] do
+    member do
+      get :comments
+    end
+  end
   resources :comments, only: [ :create, :destroy, :edit, :update ]
   resources :likes, only: [ :create, :destroy ]
   resources :follows, only: [ :create, :destroy ] do

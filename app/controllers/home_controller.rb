@@ -6,10 +6,18 @@ class HomeController < ApplicationController
       :offset,
       Post.feed_for(current_user)
           .includes(
-            :user,
-            :comments,
+            {
+              user: {
+                avatar_attachment: :blob
+              }
+            },
             :likes,
-            images_attachments: :blob
+            images_attachments: :blob,
+            comments: {
+              user: {
+                avatar_attachment: :blob
+              }
+            }
           )
           .order(created_at: :desc),
       limit: 10

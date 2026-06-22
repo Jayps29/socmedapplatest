@@ -16,6 +16,23 @@ class PostsController < ApplicationController
       @post = Post.find(params[:id])
     end
 
+    def comments
+      @post = Post.find(params[:id])
+
+      limit = params[:limit].present? ? params[:limit].to_i : 10
+
+      @comments = @post.comments
+                 .includes(
+                   user: {
+                     avatar_attachment: :blob
+                   }
+                 )
+                 .order(created_at: :desc)
+                 .limit(limit)
+
+    @limit = limit
+    end
+
     def edit
       @post = current_user.posts.find(params[:id])
     end
