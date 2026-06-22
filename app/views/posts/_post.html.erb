@@ -100,42 +100,42 @@
 
     <% end %>
     <!-- Comments -->
-<%= turbo_frame_tag "comments_post_#{post.id}" do %>
+    <%= turbo_frame_tag "comments_post_#{post.id}" do %>
 
-  <div class="space-y-2 mb-4">
+      <div class="space-y-2 mb-4">
 
-    <% post.comments
-           .order(created_at: :desc)
-           .limit(10)
-           .each do |comment| %>
+        <% post.comments
+       .sort_by(&:created_at)
+       .reverse
+       .first(10)
+       .each do |comment| %>
 
-      <%= render "comments/comment",
-          comment: comment,
-          post: post %>
+          <%= render "comments/comment", comment: comment, post: post %>
+
+        <% end %>
+
+      </div>
+
+      <% if post.comments.size > 10 %>
+
+        <div class="text-center mb-4">
+
+          <%= link_to "Load More Comments",
+          comments_post_path(post, limit: 20),
+          data: {
+            turbo_frame: "comments_post_#{post.id}",
+          },
+          class:
+            "
+                      text-blue-600 hover:text-blue-700
+                      font-medium
+                    " %>
+
+        </div>
+
+      <% end %>
 
     <% end %>
-
-  </div>
-
-  <% if post.comments.count > 10 %>
-
-    <div class="text-center mb-4">
-
-      <%= link_to "Load More Comments",
-          comments_post_path(post, offset: 10),
-          data: {
-            turbo_frame: "comments_post_#{post.id}"
-          },
-          class: "
-            text-blue-600 hover:text-blue-700
-            font-medium
-          " %>
-
-    </div>
-
-  <% end %>
-
-<% end %>
     <!-- Comment Form -->
     <% if user_signed_in? %>
 
