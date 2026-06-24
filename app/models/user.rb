@@ -162,7 +162,7 @@ has_many :received_friend_requests,
                 notifications: notifications
                   .includes(:event)
                   .order(created_at: :desc)
-                  .limit(20)
+                  .limit(10)
               }
             )
           end

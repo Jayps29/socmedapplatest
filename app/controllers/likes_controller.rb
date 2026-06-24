@@ -7,16 +7,10 @@ class LikesController < ApplicationController
       like = current_user.likes.create(post: post)
 
       unless post.user == current_user
-        LikeNotifier.with(
-        user: current_user,
-        post: post
-      ).deliver(post.user)
-
-      post.user.broadcast_notification(
-      "#{current_user.username} liked your post",
-      "like",
-      post_path(post)
-      )
+        LikeNotificationJob.perform_later(
+          post.id,
+          current_user.id
+        )
       end
 
       redirect_back fallback_location: root_path
