@@ -14,17 +14,34 @@
     </p>
 
   <% end %>
-
+  <!-- Top Users -->
   <div class="flex items-center justify-between mb-6">
 
     <h2 class="text-2xl font-bold">
       👤 Users
     </h2>
 
-    <% if @show_all_users %>
+    <% if params[:show] == "users" %>
+
+      <%= link_to "Show less",
+      users_path(
+        q: {
+          username_or_first_name_or_last_name_cont:
+            params.dig(:q, :username_or_first_name_or_last_name_cont),
+        },
+      ),
+      class: "text-blue-600 hover:text-blue-700 font-medium" %>
+
+    <% elsif @show_all_users %>
 
       <%= link_to "See all users",
-      "#",
+      users_path(
+        q: {
+          username_or_first_name_or_last_name_cont:
+            params.dig(:q, :username_or_first_name_or_last_name_cont),
+        },
+        show: "users",
+      ),
       class: "text-blue-600 hover:text-blue-700 font-medium" %>
 
     <% end %>
@@ -112,10 +129,27 @@
       📝 Posts
     </h2>
 
-    <% if @show_all_posts %>
+    <% if params[:show] == "posts" %>
+
+      <%= link_to "Show less",
+      users_path(
+        q: {
+          username_or_first_name_or_last_name_cont:
+            params.dig(:q, :username_or_first_name_or_last_name_cont),
+        },
+      ),
+      class: "text-blue-600 hover:text-blue-700 font-medium" %>
+
+    <% elsif @show_all_posts %>
 
       <%= link_to "See all posts",
-      "#",
+      users_path(
+        q: {
+          username_or_first_name_or_last_name_cont:
+            params.dig(:q, :username_or_first_name_or_last_name_cont),
+        },
+        show: "posts",
+      ),
       class: "text-blue-600 hover:text-blue-700 font-medium" %>
 
     <% end %>
