@@ -1,70 +1,149 @@
 <div class="max-w-4xl mx-auto">
 
-  <h1 class="text-3xl font-bold mb-6">
-    Find Friends
+  <h1 class="text-3xl font-bold">
+    Search Results
   </h1>
 
-  <%= search_form_for @q, url: users_path, method: :get do |f| %>
+  <% if params.dig(:q, :username_or_first_name_or_last_name_cont).present? %>
 
-    <div class="flex gap-2 mb-6">
-
-      <%= f.search_field :username_or_first_name_or_last_name_cont,
-                     placeholder: "Search users...",
-                     class: "flex-1 border rounded-lg px-4 py-2" %>
-
-      <%= f.submit "Search", class: "bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-
-    </div>
+    <p class="text-gray-500 mt-2 mb-8">
+      Results for
+      <span class="font-semibold text-gray-900">
+        "<%= params[:q][:username_or_first_name_or_last_name_cont] %>"
+      </span>
+    </p>
 
   <% end %>
 
-  <% @users.each do |user| %>
+  <div class="flex items-center justify-between mb-6">
 
-    <div class="bg-white rounded-xl shadow-sm p-4 mb-3">
+    <h2 class="text-2xl font-bold">
+      👤 Users
+    </h2>
 
-      <div class="flex items-center justify-between">
+    <% if @show_all_users %>
 
-        <div class="flex items-center gap-3">
+      <%= link_to "See all users",
+      "#",
+      class: "text-blue-600 hover:text-blue-700 font-medium" %>
 
-          <% if user.avatar.attached? %>
+    <% end %>
 
-            <%= image_tag user.avatar, class: "w-12 h-12 rounded-full object-cover" %>
+  </div>
 
-          <% else %>
+  <% if @users.any? %>
 
-            <div
-              class="
-                w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center
-              "
-            >
-              👤
-            </div>
+    <% @users.each do |user| %>
 
-          <% end %>
+      <div class="bg-white rounded-xl shadow-sm p-4 mb-3">
 
-          <div>
+        <div class="flex items-center justify-between">
 
-            <%= link_to user.username,
-            profile_path(user),
-            class: "font-semibold hover:text-blue-600" %>
+          <div class="flex items-center gap-3">
 
-            <div class="text-gray-500 text-sm">
-              <%= user.first_name %>
-              <%= user.last_name %>
+            <% if user.avatar.attached? %>
+
+              <%= image_tag user.avatar, class: "w-12 h-12 rounded-full object-cover" %>
+
+            <% else %>
+
+              <div
+                class="
+                  w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center
+                "
+              >
+                👤
+              </div>
+
+            <% end %>
+
+            <div>
+
+              <%= link_to user.username,
+              profile_path(user),
+              class: "font-semibold hover:text-blue-600" %>
+
+              <div class="text-sm text-gray-500">
+                <%= user.first_name %>
+                <%= user.last_name %>
+              </div>
+
             </div>
 
           </div>
 
+          <%= link_to "View Profile",
+          profile_path(user),
+          class:
+            "
+                          bg-gray-100
+                          px-4 py-2
+                          rounded-lg
+                          hover:bg-gray-200
+                        " %>
+
         </div>
 
-        <%= link_to "View Profile",
-        profile_path(user),
-        class: "bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200" %>
-
       </div>
+
+    <% end %>
+
+  <% else %>
+
+    <div class="bg-white rounded-xl shadow-sm p-8 text-center mb-8">
+
+      <div class="text-5xl mb-3">
+        👤
+      </div>
+
+      <p class="text-gray-500">
+        No matching users found.
+      </p>
 
     </div>
 
   <% end %>
 
-  <%= render "shared/pagination", pagy: @pagy %>
+  <hr class="my-10">
+
+  <div class="flex items-center justify-between mb-6">
+
+    <h2 class="text-2xl font-bold">
+      📝 Posts
+    </h2>
+
+    <% if @show_all_posts %>
+
+      <%= link_to "See all posts",
+      "#",
+      class: "text-blue-600 hover:text-blue-700 font-medium" %>
+
+    <% end %>
+
+  </div>
+
+  <% if @posts.any? %>
+
+    <% @posts.each do |post| %>
+
+      <%= render "posts/search_post", post: post %>
+
+    <% end %>
+
+  <% else %>
+
+    <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+
+      <div class="text-5xl mb-3">
+        📝
+      </div>
+
+      <p class="text-gray-500">
+        No matching posts found.
+      </p>
+
+    </div>
+
+  <% end %>
+
+</div>
