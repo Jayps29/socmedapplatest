@@ -1,0 +1,42 @@
+<div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+
+  <div class="flex items-center gap-3 mb-3">
+
+    <% if post.user.avatar.attached? %>
+
+      <%= image_tag post.user.avatar, class: "w-10 h-10 rounded-full object-cover" %>
+
+    <% else %>
+
+      <div
+        class="
+          w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center
+        "
+      >
+        👤
+      </div>
+
+    <% end %>
+
+    <div>
+
+      <%= link_to post.user.username,
+      profile_path(post.user),
+      class: "font-semibold hover:text-blue-600" %>
+
+      <div class="text-sm text-gray-500">
+        <%= time_ago_in_words(post.created_at) %>
+        ago
+      </div>
+
+    </div>
+
+  </div>
+
+  <p class="mb-4">
+    <%= truncate(post.content, length: 180) %>
+  </p>
+
+  <%= link_to "View Post", post_path(post), class: "text-blue-600 hover:underline" %>
+
+</div>
