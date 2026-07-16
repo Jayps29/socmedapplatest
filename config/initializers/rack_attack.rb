@@ -1,9 +1,18 @@
 class Rack::Attack
-  throttle("comments/ip", limit: 60, period: 1.minute) do |request|
-    if request.path == "/comments" && request.post?
-      request.ip
-    end
+throttle("comments/ip", limit: 20, period: 1.minute) do |request|
+  if request.path == "/comments" && request.post?
+    request.ip
   end
+end
+
+throttle("comments/per_post", limit: 5, period: 1.minute) do |request|
+  next unless request.path == "/comments"
+  next unless request.post?
+
+  key = "#{request.ip}:#{request.params['post_id']}"
+
+  key
+end
 
   throttle("likes/ip", limit: 60, period: 1.minute) do |request|
     if request.path == "/likes" && request.post?
