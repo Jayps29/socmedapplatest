@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!
+
   def index
+    authorize! :read, User
+
     @q = User.ransack(params[:q])
 
     users_scope = @q.result(distinct: true)
@@ -7,14 +11,14 @@ class UsersController < ApplicationController
                     .where.not(id: current_user.id)
                     .order(:username)
 
-                    @show_all_users = users_scope.limit(6).size > 5
+    @show_all_users = users_scope.limit(6).size > 5
 
-                    @users =
-                      if params[:show] == "users"
-                        users_scope
-                      else
-                        users_scope.limit(5)
-                      end
+    @users =
+      if params[:show] == "users"
+        users_scope
+      else
+        users_scope.limit(5)
+      end
 
     @posts = []
     @show_all_posts = false
@@ -40,18 +44,20 @@ class UsersController < ApplicationController
         )
         .order(created_at: :desc)
 
-        @show_all_posts = posts_scope.limit(6).size > 5
+      @show_all_posts = posts_scope.limit(6).size > 5
 
-        @posts =
-          if params[:show] == "posts"
-            posts_scope
-          else
-            posts_scope.limit(5)
-          end
+      @posts =
+        if params[:show] == "posts"
+          posts_scope
+        else
+          posts_scope.limit(5)
+        end
     end
   end
 
   def search
+    authorize! :read, User
+
     query = params[:query].to_s.strip
 
     @users = User

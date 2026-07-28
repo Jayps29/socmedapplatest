@@ -1,16 +1,16 @@
 class FriendshipsController < ApplicationController
-    before_action :authenticate_user!
+  before_action :authenticate_user!
 
-    def destroy
-      friendship = current_user.friendships.find(params[:id])
+  load_and_authorize_resource
 
-      Friendship.where(
-        user: friendship.friend,
-        friend: current_user
-      ).destroy_all
+  def destroy
+    Friendship.where(
+      user: @friendship.friend,
+      friend: current_user
+    ).destroy_all
 
-      friendship.destroy
+    @friendship.destroy
 
-      redirect_back fallback_location: root_path
-    end
+    redirect_back fallback_location: root_path
+  end
 end
