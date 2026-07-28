@@ -1,26 +1,32 @@
 class LikesController < ApplicationController
-    before_action :authenticate_user!
+  before_action :authenticate_user!
 
-    def create
-      post = Post.find(params[:post_id])
+  def create
+    post = Post.find(params[:post_id])
 
-      like = current_user.likes.create(post: post)
+    like = current_user.likes.build(post: post)
 
-      unless post.user == current_user
-        LikeNotificationJob.perform_later(
-          post.id,
-          current_user.id
-        )
-      end
+    authorize! :create, like
 
-      redirect_back fallback_location: root_path
+    like.save!
+
+    unless post.user == current_user
+      LikeNotificationJob.perform_later(
+        post.id,
+        current_user.id
+      )
     end
 
-    def destroy
-      like = current_user.likes.find(params[:id])
+    redirect_back fallback_location: root_path
+  end
 
-      like.destroy
+  def destroy
+    like = current_user.likes.find(params[:id])
 
-      redirect_back fallback_location: root_path
-    end
+    authorize! :destroy, like
+
+    like.destroy
+
+    redirect_back fallback_location: root_path
+  end
 end

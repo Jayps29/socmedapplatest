@@ -1,71 +1,69 @@
 class PostsController < ApplicationController
-    before_action :authenticate_user!
+  before_action :authenticate_user!
 
-    def create
-      @post = current_user.posts.build(post_params)
+  load_and_authorize_resource except: %i[create comments]
 
-      if @post.save
-        redirect_back fallback_location: root_path
-      else
-        redirect_back fallback_location: root_path,
-                      alert: "Unable to create post"
-      end
+  def create
+    @post = current_user.posts.build(post_params)
+    authorize! :create, @post
+
+    if @post.save
+      redirect_back fallback_location: root_path
+    else
+      redirect_back fallback_location: root_path,
+                    alert: "Unable to create post"
     end
+  end
 
-    def show
-      @post = Post.find(params[:id])
-    end
+  def show
+  end
 
-    def comments
-      @post = Post.find(params[:id])
+  def comments
+    @post = Post.find(params[:id])
+    authorize! :read, @post
 
-      limit = params[:limit].present? ? params[:limit].to_i : 10
+    limit = params[:limit].present? ? params[:limit].to_i : 10
 
-      @comments = @post.comments
-                 .includes(
-                   user: {
-                     avatar_attachment: :blob
-                   }
-                 )
-                 .order(created_at: :desc)
-                 .limit(limit)
+    @comments = @post.comments
+                     .includes(
+                       user: {
+                         avatar_attachment: :blob
+                       }
+                     )
+                     .order(created_at: :desc)
+                     .limit(limit)
 
     @limit = limit
+  end
+
+  def edit
+  end
+
+  def update
+    if @post.update(post_params)
+      redirect_back fallback_location: root_path,
+                    notice: "Post updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
     end
+  end
 
-    def edit
-      @post = current_user.posts.find(params[:id])
-    end
+  def destroy
+    @post.destroy
 
-    def update
-      @post = current_user.posts.find(params[:id])
-
-      if @post.update(post_params)
-        redirect_back fallback_location: root_path,
-                      notice: "Post updated successfully."
-      else
-        render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      format.html do
+        redirect_back fallback_location: root_path
       end
+
+      format.turbo_stream
     end
+  end
 
-    def destroy
-      @post = current_user.posts.find(params[:id])
+  private
 
-      @post.destroy
-
-      respond_to do |format|
-        format.html do
-          redirect_back fallback_location: root_path
-        end
-
-        format.turbo_stream
-      end
-    end
-
-    private
-
-    def post_params
-      params.require(:post)
-            .permit(:content, images: [])
-    end
+  def post_params
+    params.require(:post)
+          .permit(:content, images: [])
+  end
 end

@@ -2,6 +2,9 @@ class HomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
+    authorize! :read, Post
+    authorize! :create, Post
+
     @pagy, @posts = pagy(
       :offset,
       Post.feed_for(current_user)

@@ -1,43 +1,45 @@
 class FollowsController < ApplicationController
-    before_action :authenticate_user!
+  before_action :authenticate_user!
 
-    def create
-        user = User.find(params[:user_id])
+  load_and_authorize_resource except: [ :create ]
 
-        return redirect_back(fallback_location: root_path) if user == current_user
+  def create
+    user = User.find(params[:user_id])
 
-        current_user.active_follows.create!(
-          followed: user
-        )
+    return redirect_back(fallback_location: root_path) if user == current_user
 
-        FollowNotifier.with(
-        follower: current_user
-        ).deliver(user)
+    @follow = current_user.active_follows.build(
+      followed: user
+    )
 
-        user.broadcast_notification(
-        "#{current_user.username} followed you",
-        "follow",
-        profile_path(current_user)
-        )
+    authorize! :create, @follow
 
-        redirect_back fallback_location: root_path
-    end
+    @follow.save!
 
-    def destroy
-      follow = current_user.active_follows.find(params[:id])
+    FollowNotifier.with(
+      follower: current_user
+    ).deliver(user)
 
-      follow.destroy
+    user.broadcast_notification(
+      "#{current_user.username} followed you",
+      "follow",
+      profile_path(current_user)
+    )
 
-      redirect_back fallback_location: root_path
-    end
+    redirect_back fallback_location: root_path
+  end
 
-    def remove_follower
-        follow = Follow.find(params[:id])
+  def destroy
+    @follow.destroy
 
-        if follow.followed == current_user
-          follow.destroy
-        end
+    redirect_back fallback_location: root_path
+  end
 
-        redirect_back fallback_location: root_path
-    end
+  def remove_follower
+    authorize! :remove_follower, @follow
+
+    @follow.destroy
+
+    redirect_back fallback_location: root_path
+  end
 end

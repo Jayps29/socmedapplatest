@@ -1,8 +1,12 @@
 class ApplicationController < ActionController::Base
   include Pagy::Method
 
-
   before_action :configure_permitted_parameters, if: :devise_controller?
+
+  rescue_from CanCan::AccessDenied do |_exception|
+    redirect_to root_path,
+                alert: "You are not authorized to perform this action."
+  end
 
   protected
 
