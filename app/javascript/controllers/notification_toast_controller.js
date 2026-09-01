@@ -4,11 +4,20 @@ import Toastify from "toastify-js"
 export default class extends Controller {
   connect() {
     this.showToast = this.showToast.bind(this)
+    this.handleTurboSubmitEnd =
+      this.handleTurboSubmitEnd.bind(this)
 
     document.addEventListener(
       "notification:received",
       this.showToast
     )
+
+    document.addEventListener(
+      "turbo:submit-end",
+      this.handleTurboSubmitEnd
+    )
+
+    this.showFlashMessages()
   }
 
   disconnect() {
@@ -16,10 +25,111 @@ export default class extends Controller {
       "notification:received",
       this.showToast
     )
+
+    document.removeEventListener(
+      "turbo:submit-end",
+      this.handleTurboSubmitEnd
+    )
+  }
+
+
+
+  showFlashMessages() {
+    const flash = document.querySelector("[data-flash-toast]")
+
+    if (!flash) {
+      return
+    }
+
+    const notice = flash.dataset.flashNotice
+    const alert = flash.dataset.flashAlert
+
+    if (notice) {
+      this.showSimpleToast(notice, "success")
+    }
+
+    if (alert) {
+      this.showSimpleToast(alert, "error")
+    }
+  }
+
+  async handleTurboSubmitEnd(event) {
+    const response =
+      event.detail.fetchResponse?.response
+
+    if (!response || response.status !== 429) {
+      return
+    }
+
+    try {
+      const data = await response.json()
+
+      this.showSimpleToast(
+        data.error ||
+        "Too many requests. Please try again later.",
+        "error"
+      )
+    } catch (error) {
+      this.showSimpleToast(
+        "Too many requests. Please try again later.",
+        "error"
+      )
+    }
+  }
+
+  showSimpleToast(message, type) {
+    const icons = {
+      success: "✅",
+      error: "❌"
+    }
+
+
+
+    const content = document.createElement("div")
+
+    content.innerHTML = `
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          gap:12px;
+          padding:12px;
+        "
+      >
+        <div
+          style="
+            font-size:20px;
+            line-height:1;
+          "
+        >
+          ${icons[type] || "🔔"}
+        </div>
+
+        <div
+          style="
+            font-size:14px;
+            font-weight:500;
+            line-height:1.4;
+            color:#111827;
+          "
+        >
+          ${message}
+        </div>
+      </div>
+    `
+
+    Toastify({
+      node: content,
+      duration: 5000,
+      gravity: "bottom",
+      position: "right",
+      close: false,
+      stopOnFocus: true,
+      className: "social-toast"
+    }).showToast()
   }
 
   showToast(event) {
-
     const icons = {
       follow: "👤",
       like: "❤️",
@@ -55,24 +165,57 @@ export default class extends Controller {
       })
 
       content.innerHTML = `
+        <div
+          style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            height:100%;
+            padding:12px;
+          "
+        >
+          <div
+            style="
+              font-size:20px;
+              line-height:1;
+            "
+          >
+            ${icon}
+          </div>
+
+          <div
+            style="
+              font-size:14px;
+              font-weight:500;
+              line-height:1.4;
+              color:#111827;
+            "
+          >
+            ${event.detail.message}
+          </div>
+        </div>
+      `
+    } else {
+      content.innerHTML = `
+        <div
+          style="
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            padding:12px;
+          "
+        >
           <div
             style="
               display:flex;
               align-items:center;
               gap:12px;
-              height:100%;
-              padding:12px;
             "
           >
-            <div
-              style="
-                font-size:20px;
-                line-height:1;
-              "
-            >
+            <div style="font-size:20px;">
               ${icon}
             </div>
-    
+
             <div
               style="
                 font-size:14px;
@@ -84,76 +227,43 @@ export default class extends Controller {
               ${event.detail.message}
             </div>
           </div>
-        `
-    } else {
-      content.innerHTML = `
+
           <div
             style="
               display:flex;
-              flex-direction:column;
-              gap:12px;
-              padding:12px;
+              gap:8px;
             "
           >
-            <div
+            <button
+              id="accept-request"
               style="
-                display:flex;
-                align-items:center;
-                gap:12px;
+                padding:6px 12px;
+                border:none;
+                border-radius:6px;
+                background:#2563eb;
+                color:white;
+                cursor:pointer;
               "
             >
-              <div style="font-size:20px;">
-                ${icon}
-              </div>
-    
-              <div
-                style="
-                  font-size:14px;
-                  font-weight:500;
-                  line-height:1.4;
-                  color:#111827;
-                "
-              >
-                ${event.detail.message}
-              </div>
-            </div>
-    
-            <div
+              Accept
+            </button>
+
+            <button
+              id="decline-request"
               style="
-                display:flex;
-                gap:8px;
+                padding:6px 12px;
+                border:none;
+                border-radius:6px;
+                background:#dc2626;
+                color:white;
+                cursor:pointer;
               "
             >
-              <button
-                id="accept-request"
-                style="
-                  padding:6px 12px;
-                  border:none;
-                  border-radius:6px;
-                  background:#2563eb;
-                  color:white;
-                  cursor:pointer;
-                "
-              >
-                Accept
-              </button>
-    
-              <button
-                id="decline-request"
-                style="
-                  padding:6px 12px;
-                  border:none;
-                  border-radius:6px;
-                  background:#dc2626;
-                  color:white;
-                  cursor:pointer;
-                "
-              >
-                Decline
-              </button>
-            </div>
+              Decline
+            </button>
           </div>
-        `
+        </div>
+      `
 
       const acceptButton =
         content.querySelector("#accept-request")
@@ -180,13 +290,12 @@ export default class extends Controller {
             }
           )
 
-
           if (response.ok) {
             content.innerHTML = `
-          <div style="padding:12px;font-weight:500;">
-            ✅ Friend request accepted
-          </div>
-        `
+              <div style="padding:12px;font-weight:500;">
+                ✅ Friend request accepted
+              </div>
+            `
           }
         }
       )

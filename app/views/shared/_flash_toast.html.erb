@@ -1,0 +1,7 @@
+<% if notice.present? || alert.present? %>
+  <div
+    data-flash-toast
+    data-flash-notice="<%= notice.to_s %>"
+    data-flash-alert="<%= alert.to_s %>"
+  ></div>
+<% end %>

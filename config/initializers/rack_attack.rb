@@ -36,6 +36,10 @@ end
         "Too many search requests. Please wait a moment and try again."
       when "/users/sign_in"
         "Too many login attempts. Please try again in a minute."
+      when "/comments"
+        "Too many comments. Please slow down and try again."
+      when "/likes"
+        "Too many likes. Please slow down and try again."
       else
         "Too many requests. Please slow down and try again later."
       end

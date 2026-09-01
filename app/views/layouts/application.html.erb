@@ -20,7 +20,6 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
 
     <%= javascript_importmap_tags %>
-
   </head>
 
   <body class="bg-gray-100" data-controller="notification-toast">
@@ -36,7 +35,7 @@
         <div class="flex items-center justify-between h-16">
 
           <%= link_to root_path,
-                  class: "text-2xl font-bold text-blue-600" do %>
+                class: "text-2xl font-bold text-blue-600" do %>
             SocialApp
           <% end %>
 
@@ -67,6 +66,7 @@
                 ></div>
 
               </div>
+
               <!-- Notification Bell -->
               <div data-controller="notifications" class="relative">
 
@@ -97,10 +97,11 @@
                 </div>
 
               </div>
+
               <!-- User Dropdown -->
               <details class="relative">
 
-                <summary class="list-none cursor-pointer flex items-center gap-3">
+                <summary class=" list-none cursor-pointer flex items-center gap-3 ">
 
                   <% if current_user.avatar.attached? %>
 
@@ -164,7 +165,11 @@
 
               <%= link_to "Register",
               new_user_registration_path,
-              class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg" %>
+              class:
+                "
+                                bg-blue-600 hover:bg-blue-700
+                                text-white px-4 py-2 rounded-lg
+                              " %>
 
             </div>
 
@@ -178,22 +183,15 @@
 
     <main class="max-w-6xl mx-auto py-6 px-4">
 
-      <% if notice.present? %>
-        <div class="bg-green-100 text-green-700 px-4 py-3 rounded-lg mb-4">
-          <%= notice %>
-        </div>
-      <% end %>
-
-      <% if alert.present? %>
-        <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-4">
-          <%= alert %>
-        </div>
-      <% end %>
-
       <%= yield %>
 
     </main>
 
+    <!-- Rails Flash Messages -->
+    <%= render "shared/flash_toast" %>
+
+    <!-- Toastify Notifications -->
     <div id="toast_notifications"></div>
+
   </body>
 </html>
